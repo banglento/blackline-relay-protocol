@@ -1,12 +1,12 @@
 # BLACKLINE: Relay Protocol
 
 [![make.fun · threejs-fps-02](https://make.fun/badge/threejs-fps-02.svg)](https://make.fun/bounty/threejs-fps-02?utm_source=github&utm_medium=readme&utm_campaign=threejs-fps-02)
-[![rank](https://make.fun/badge/threejs-fps-02/local-build/blackline-relay-protocol/rank.svg)](https://make.fun/bounty/threejs-fps-02/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=threejs-fps-02)
-[![reward](https://make.fun/badge/threejs-fps-02/local-build/blackline-relay-protocol/reward.svg)](https://make.fun/bounty/threejs-fps-02?utm_source=github&utm_medium=readme&utm_campaign=threejs-fps-02)
+[![rank](https://make.fun/badge/threejs-fps-02/banglento/blackline-relay-protocol/rank.svg)](https://make.fun/bounty/threejs-fps-02/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=threejs-fps-02)
+[![reward](https://make.fun/badge/threejs-fps-02/banglento/blackline-relay-protocol/reward.svg)](https://make.fun/bounty/threejs-fps-02?utm_source=github&utm_medium=readme&utm_campaign=threejs-fps-02)
 
 A self-contained three.js tactical FPS set in a night freight depot. Secure three relay terminals, break enemy sightlines with cover and smoke, and return to the extraction pad. Seven guards patrol the compact arena and react to visibility, sprinting, and gunfire. The K-9 rifle is semi-automatic, with a 12-round magazine and limited reserves.
 
-This is a local v1 build for the “Make the best three.js tactical FPS” bounty. Nothing has been submitted or published. The rank/reward badge paths currently use the explicitly reserved local identity `local-build/blackline-relay-protocol`; replace those two path components with the real public GitHub owner/repository before submission. They are not a claim that a public repository exists.
+This is the public entry repository for the “Make the best three.js tactical FPS” bounty on make.fun. The badges above are live: the rank and reward badges track this repository's standing in the competition.
 
 ## Run it
 
