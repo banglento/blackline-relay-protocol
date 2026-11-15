@@ -42,7 +42,7 @@ function textSprite(text, color = '#8ce6d8') {
 function setupRenderer() {
   renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
   const gl = renderer.getContext(); const debug = gl.getExtension('WEBGL_debug_renderer_info'); const gpu = debug ? gl.getParameter(debug.UNMASKED_RENDERER_WEBGL) : ''; const software = /swiftshader|llvmpipe|software/i.test(gpu);
-  renderer.setPixelRatio(software ? .65 : Math.min(devicePixelRatio, 1.5)); renderer.setSize(innerWidth, innerHeight); renderer.shadowMap.enabled = !software; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.setPixelRatio(software ? .4 : Math.min(devicePixelRatio, 1.5)); renderer.setSize(innerWidth, innerHeight); renderer.shadowMap.enabled = !software; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   document.documentElement.dataset.renderer = software ? 'software' : 'hardware';
   renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.12;
   addEventListener('resize', () => { if (!camera) return; camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
@@ -55,6 +55,7 @@ function setupScene() {
   const moon = new THREE.DirectionalLight(0x9bb8ce, 2.2); moon.position.set(-18, 30, 10); moon.castShadow = true; moon.shadow.mapSize.set(1024, 1024); moon.shadow.camera.left = -30; moon.shadow.camera.right = 30; moon.shadow.camera.top = 30; moon.shadow.camera.bottom = -30; scene.add(moon);
   const cyanLight = new THREE.PointLight(COLORS.cyan, 12, 13, 2); cyanLight.position.set(-14, 4, -9); scene.add(cyanLight);
   buildArena(); buildWeapon(); buildRelays(); buildEnemies();
+  if (document.documentElement.dataset.renderer === 'software') scene.traverse(object => { if (object.isPointLight && object !== muzzleLight) object.visible = false; });
 }
 function buildArena() {
   const floor = new THREE.Mesh(new THREE.PlaneGeometry(level.width, level.depth), mat(0x101c22, .95, .02)); floor.rotation.x = -Math.PI / 2; floor.position.set(0, 0, -2); floor.receiveShadow = true; scene.add(floor);
@@ -158,7 +159,7 @@ function updateEnemies(delta, time) {
     else data.alert = Math.max(0, data.alert - delta * .2);
     if (data.alert > 1.25) data.state = 'alert'; data.marker.visible = data.state === 'alert';
     if (data.state === 'alert') { enemy.rotation.set(0, Math.atan2(toPlayer.x, toPlayer.z) + Math.PI, 0); if (sees && dist < 15 && time > data.fireAt) { data.fireAt = time + 850 + data.phase * 100; spawnTracer(enemy.position.clone().add(new THREE.Vector3(0,1.2,0)), camera.position); takeDamage(7 + Math.random() * 5); } if (!sees && data.alert < .2) data.state = 'patrol'; }
-    else { const target = data.patrol.clone(); target.x += Math.sin(time * .00035 + data.phase) * 2.8; target.z += Math.cos(time * .00032 + data.phase) * 2.1; enemy.lookAt(target.x, 1.1, target.z); enemy.position.lerp(target, delta * .25); }
+    else { const target = data.patrol.clone(); target.x += Math.sin(time * .00035 + data.phase) * 2.8; target.z += Math.cos(time * .00032 + data.phase) * 2.1; enemy.rotation.set(0, Math.atan2(target.x-enemy.position.x,target.z-enemy.position.z)+Math.PI,0); enemy.position.lerp(target, delta * .25); }
   });
 }
 function hasLineOfSight(from, to) { if (particles.some(p => p.userData.smoke && segmentNearSphere(from, to, p.position, 2.8))) return false; const origin = from.clone().add(new THREE.Vector3(0, 1.3, 0)); const direction = to.clone().sub(origin).normalize(); raycaster.set(origin, direction); const hit = raycaster.intersectObjects(colliders.map(c => c.mesh), false)[0]; return !hit || hit.distance > from.distanceTo(to) - .5; }

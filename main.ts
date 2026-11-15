@@ -21,5 +21,8 @@ async function inventory(dir, prefix = '') {
   }
 }
 await inventory(source);
+// Include the real play-test captures with the static entry for offline review.
+await cp(join(root, 'screenshots'), join(output, 'screenshots'), { recursive: true });
+await inventory(join(root, 'screenshots'), 'screenshots/');
 await writeFile(join(output, 'manifest.json'), JSON.stringify({ title: 'BLACKLINE: Relay Protocol', version: '1.0.0', entry: 'index.html', files }, null, 2) + '\n');
 console.log(JSON.stringify({ status: 'ok', entry: 'index.html', files: files.length }));

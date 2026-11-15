@@ -20,6 +20,7 @@ try {
   check('WebGL 2 and scene render', await page.evaluate(() => !!window.__qa.renderer.getContext() && window.__qa.renderer.info.render.triangles > 1000));
   await page.screenshot({ path: 'screenshots/01-insertion.png', timeout: 20000 });
   await page.locator('#start-button').click();
+  await page.evaluate(() => window.__qa.enemies.forEach(e => e.userData.fireAt = Number.MAX_SAFE_INTEGER));
   await waitFrames();
   check('Start and pointer lock', await page.evaluate(() => window.__qa.state.running && document.pointerLockElement === document.querySelector('#game-canvas')));
   const startZ = await page.evaluate(() => window.__qa.camera.position.z);
@@ -28,17 +29,18 @@ try {
   check('WASD changes position', await page.evaluate(z => window.__qa.camera.position.z < z, startZ));
   await page.keyboard.down('Control'); await waitFrames();
   check('Crouch lowers camera', await page.evaluate(() => window.__qa.camera.position.y === 1.12)); await page.keyboard.up('Control');
-  await page.mouse.down({ button: 'right' }); for (let i=0;i<14;i++) await waitFrames();
+  await page.mouse.down({ button: 'right' }); for (let i=0;i<5;i++) await waitFrames();
   check('ADS narrows field of view', await page.evaluate(() => window.__qa.camera.fov < 60)); await page.mouse.up({ button: 'right' });
   const cover = await page.evaluate(() => { const q=window.__qa; const center=q.camera.position.clone().set(-8,1.7,7); return q.isBlocked(center) && !q.hasLineOfSight(center.clone().set(-8,0,3),center.clone().set(-8,1.7,11)); });
   check('Cover blocks movement and enemy sight', cover);
   await page.evaluate(() => { const q=window.__qa; q.teleport(0,17); q.aim(0,1.7,-15); }); await waitFrames();
   await page.screenshot({ path: 'screenshots/02-dock.png', timeout: 20000 });
   // Isolate hit detection with one real enemy at a clear, nearby position.
-  await page.evaluate(() => { const q=window.__qa; q.teleport(0,17); q.enemies[0].position.set(0,0,12); q.enemies[0].userData.patrol.set(0,0,12); q.enemies.forEach(e=>e.userData.fireAt=performance.now()+100000); q.aim(0,1.2,12); });
+  await page.evaluate(() => { const q=window.__qa; q.teleport(0,17); q.enemies[0].position.set(0,0,12); q.enemies[0].userData.patrol.set(0,0,12); q.enemies[0].rotation.set(0,0,0); q.enemies[0].userData.state='alert'; q.enemies[0].userData.alert=4; q.enemies.forEach(e=>e.userData.fireAt=performance.now()+100000); q.aim(0,1.2,12); });
   await waitFrames(); await page.evaluate(() => window.__qa.shoot());
   await page.waitForTimeout(200);
   await page.evaluate(() => { const q=window.__qa; q.aim(q.enemies[0].position.x,1.2,q.enemies[0].position.z); q.shoot(); });
+  console.log('combat diagnostic', await page.evaluate(() => ({ammo:window.__qa.state.ammo,shots:window.__qa.state.shots,hits:window.__qa.state.hits,health:window.__qa.state.health,ended:window.__qa.state.ended,enemy:window.__qa.enemies[0].userData.health,position:window.__qa.enemies[0].position.toArray()})));
   check('Two valid rifle hits kill hostile', await page.evaluate(() => window.__qa.state.hits === 2 && window.__qa.state.hostiles === 6));
   await page.keyboard.press('r'); await page.waitForTimeout(1500); await waitFrames();
   check('Reload transfers reserve ammunition', await page.evaluate(() => window.__qa.state.ammo === 12 && window.__qa.state.reserve === 46 && !window.__qa.state.reloading));
@@ -59,6 +61,9 @@ try {
   await page.screenshot({ path: 'screenshots/04-extraction.png', timeout: 20000 });
   await page.locator('#restart-button').click(); await waitFrames();
   check('Restart resets enemies, ammo and objectives', await page.evaluate(() => window.__qa.state.ammo===12 && window.__qa.state.relays===0 && window.__qa.state.hostiles===7 && window.__qa.state.health===100));
+  await page.evaluate(() => { const q=window.__qa; q.teleport(0,17); q.enemies[0].position.set(0,0,12); q.enemies[0].userData.state='alert'; q.enemies[0].userData.fireAt=0; });
+  for (let i=0;i<3;i++) await waitFrames();
+  check('Alert guard deals damage on clear sightline', await page.evaluate(() => window.__qa.state.health<100));
   await page.evaluate(() => window.__qa.takeDamage(100));
   check('Lethal damage produces defeat', await page.locator('#end-title').innerText() === 'OPERATOR DOWN');
   check('All assets local', requests.every(url => url.startsWith('http://127.0.0.1:4173/') || url.startsWith('data:')));
