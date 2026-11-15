@@ -20,5 +20,5 @@ test('All runtime imports point to shipped local assets', async () => {
   const html=await readFile('web/index.html','utf8'), js=await readFile('web/game.js','utf8'), css=await readFile('web/styles.css','utf8');
   assert.doesNotMatch(html, /(?:src|href)=["']https?:/); assert.doesNotMatch(css,/@import/);
   assert.match(js,/from '\.\/vendor\/three.module.js'/);
-  assert.match(await readFile('web/vendor/three.module.js','utf8'),/from '\.\/three.core.js'/);
+  assert.match(await readFile('web/vendor/three.module.js','utf8'),/from\s*["']\.\/three\.core\.min\.js["']/);
 });
