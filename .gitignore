@@ -1,0 +1,8 @@
+node_modules/
+.cache/
+.playwright/
+.test-output/
+out/
+*.log
+.env
+.env.*

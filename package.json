@@ -1,0 +1,17 @@
+{
+  "name": "blackline-relay-protocol",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A self-contained three.js tactical FPS built for make.fun.",
+  "scripts": {
+    "build": "node main.ts",
+    "start": "node scripts/serve.mjs",
+    "test": "node --test tests/core.test.mjs",
+    "test:browser": "node tests/browser.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.58.2",
+    "three": "0.183.2"
+  }
+}

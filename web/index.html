@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#070b12" />
+  <title>BLACKLINE // RELAY PROTOCOL</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main id="game-shell" aria-label="Blackline tactical FPS">
+    <canvas id="game-canvas"></canvas>
+    <div id="vignette"></div>
+    <div id="scanlines"></div>
+
+    <section id="boot-screen" class="screen active">
+      <div class="brand-mark"><span>BL</span><i></i></div>
+      <p class="eyebrow">NIGHT OPERATIONS // SECTOR 07</p>
+      <h1>BLACKLINE<span>:</span><br /><strong>RELAY PROTOCOL</strong></h1>
+      <p class="dek">A compact tactical FPS about signal, cover, and the last clean exit.</p>
+      <button id="start-button" class="primary-button">BEGIN INSERTION <span>↗</span></button>
+      <div class="boot-meta"><span>BUILD 1.0.0 / OFFLINE</span><span>WEBGL 2 // 60 FPS TARGET</span></div>
+    </section>
+
+    <section id="hud" class="hidden" aria-live="polite">
+      <header class="hud-top">
+        <div class="objective-card">
+          <span class="label">PRIMARY OBJECTIVE</span>
+          <strong id="objective-text">SECURE THE RELAY NETWORK</strong>
+          <div class="progress-track"><i id="objective-progress"></i></div>
+        </div>
+        <div class="mission-readout"><span>OPERATION</span><strong>BLACKLINE / 07</strong><em id="mission-time">00:00</em></div>
+        <div class="status-card"><span class="label">THREAT LEVEL</span><strong id="threat-text">LOW</strong><div class="signal-bars"><i></i><i></i><i></i><i></i><i></i></div></div>
+      </header>
+      <div id="interaction-prompt" class="interaction hidden"><kbd>E</kbd><span>INTERACT</span></div>
+      <div id="damage-flash"></div>
+      <div id="center-message" class="center-message hidden"></div>
+      <div class="crosshair"><i></i><i></i><i></i><i></i><b></b></div>
+      <aside class="left-rail"><div class="rail-tag">LIVE FEED <span></span></div><div class="compass"><span>N</span><div class="compass-line"></div><span id="heading">000</span></div><div class="intel-line"><span>COMMS</span><b>SECURE</b></div></aside>
+      <aside class="right-rail"><canvas id="minimap" width="180" height="180"></canvas><div class="map-label">SCHEMATIC // 01</div></aside>
+      <footer class="hud-bottom">
+        <div class="vitals"><div class="health-wrap"><span>VITALS</span><div class="health-track"><i id="health-bar"></i></div><strong id="health-value">100</strong></div><div class="stance"><i id="stance-dot"></i><span id="stance-text">STANDING</span></div></div>
+        <div class="weapon"><div class="weapon-label"><span id="weapon-mode">SEMI</span><b>RIFLE / K-9</b></div><div class="ammo"><strong id="ammo-value">12</strong><span>/ 48</span></div><div class="reload-line"><i id="reload-progress"></i></div></div>
+        <div class="controls-hint"><kbd>WASD</kbd> MOVE <kbd>SHIFT</kbd> SPRINT <kbd>CTRL</kbd> CROUCH <kbd>R</kbd> RELOAD</div>
+      </footer>
+    </section>
+
+    <section id="pause-screen" class="screen overlay-screen hidden"><div class="panel"><p class="eyebrow">SIGNAL HELD</p><h2>PAUSED</h2><p>Keep the line clean. Resume when ready.</p><button id="resume-button" class="primary-button">RESUME <span>↗</span></button></div></section>
+    <section id="end-screen" class="screen overlay-screen hidden"><div class="panel"><p id="end-kicker" class="eyebrow">MISSION REPORT</p><h2 id="end-title">EXTRACTION COMPLETE</h2><p id="end-copy">The relays are dark. Your route out is clear.</p><div class="score-grid"><div><span>TIME</span><strong id="end-time">00:00</strong></div><div><span>HOSTILES</span><strong id="end-hostiles">00</strong></div><div><span>ACCURACY</span><strong id="end-accuracy">00%</strong></div></div><button id="restart-button" class="primary-button">RUN IT AGAIN <span>↗</span></button></div></section>
+    <div id="toast" class="toast hidden"></div>
+  </main>
+  <script type="module" src="./game.js"></script>
+</body>
+</html>
